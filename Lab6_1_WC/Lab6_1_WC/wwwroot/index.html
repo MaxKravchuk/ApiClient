@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Orders App</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div>
+        <h2>All Posts</h2>
+        <ul id="posts"/>
+    </div>
+    <div>
+        <h2>Menu bar</h2>
+        <a href="signin.html">Reg</a>
+        <p id="order" />
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'https://localhost:44338/Post';
+
+        $(document).ready(function () {
+            $.getJSON(uri)
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formating(item)}).appendTo($('#posts'));
+                    });
+                });
+        });
+
+        function formating(item) {
+            return 'Id: ' + item.id + ' Guest: ' + item.guestLogin + ' Header: ' + item.newsHeader + ' Body: ' + item.newsBody;
+        }
+
+    </script>
+</body>
+</html>

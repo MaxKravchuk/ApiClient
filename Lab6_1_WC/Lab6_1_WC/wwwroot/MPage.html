@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Reg</title>
+</head>
+<body>
+    <div>
+        <p>All Posts</p>
+        <ul id="posts" />
+    </div>
+    <div>
+        <p>All Guests</p>
+        <ul id="guests" />
+    </div>
+    <div>
+        <p>Add post form</p><br />
+        <input type="text" id="glog" placeholder="Login" /><br />
+        <input type="text" id="nH" placeholder="Header" /><br />
+        <input type="text" id="nB" placeholder="Body" /><br />
+        <input type="text" id="tag" placeholder="Tag" /><br />
+        <input type="text" id="rub" placeholder="Rubric" /><br />
+        <input type="text" id="top" placeholder="Topic" /><br />
+        <input type="time" id="time" placeholder="Time" /><br />
+    </div>
+    <div>
+        <p>Delete form</p><br />
+        <input type="text" id="delLog" placeholder="Login" /><br />
+        <input type="text" id="delId" placeholder="Id" /><br />
+    </div>
+    <div>
+        <button value="reg" onclick="add()">Post</button><br />
+        <button value="reg" onclick="clear()">Сlear</button><br />
+        <button value="reg" onclick="dp()">Delete post</button><br />
+        <button value="reg" onclick="dg()">Delete guest</button><br />
+    </div>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $.getJSON('https://localhost:44338/Post')
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatingP(item) }).appendTo($('#posts'));
+                    });
+                });
+        });
+
+        $(document).ready(function () {
+            $.getJSON('https://localhost:44338/Guest')
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatingG(item) }).appendTo($('#guests'));
+                    });
+                });
+        });
+
+        function formatingP(item) {
+            return 'Id: ' + item.id + ' Guest: ' + item.guestLogin + ' Header: ' + item.newsHeader + ' Body: ' + item.newsBody;
+        }
+
+        function formatingG(item) {
+            return 'Login: ' + item.login + ' Role: ' + item.guestRole;
+        }
+
+        async function add() {
+            var login = $('#glog').val();
+            var nH = $('#nH').val();
+            var nB = $('#nB').val();
+            var tag = $('#tag').val();
+            var rub = $('#rub').val();
+            var top = $('#top').val();
+            var time = $('#time').val();
+
+            const resp = await fetch("https://localhost:44338/Post", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    guestLogin: login,
+                    newsHeader: nH,
+                    newsBody: nB,
+                    tags: tag,
+                    rubric: rub,
+                    topic: top,
+                    dateTime: time
+                })
+            });
+            if (resp.ok === true) {
+                alert("ok");
+            }
+        }
+
+        async function dp() {
+            var id_ = $('#delId').val();
+
+            const resp = await fetch("https://localhost:44338/Post/"+id_, {
+                method: "DELETE",
+                headers: { "Accept": "application/json"}
+            });
+            if (resp.ok === true) {
+                alert("ok");
+            }
+        }
+
+        async function dg() {
+            var login_ = $('#delLog').val();
+
+            const resp = await fetch("https://localhost:44338/Guest/"+login_, {
+                method: "DELETE",
+                headers: { "Accept": "application/json"}
+            });
+            if (resp.ok === true) {
+                alert("ok");
+            }
+        }
+
+        function clear() {
+            $('#glog').val() = "";
+            $('#nH').val() = "";
+            $('#nB').val() = "";
+            $('#tag').val() = "";
+            $('#rub').val() = "";
+            $('#top').val() = "";
+            $('#time').val() = "";
+        }
+    </script>
+</body>
+</html>
